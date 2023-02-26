@@ -1,0 +1,4 @@
+crisp_api==1.1.18
+PyYAML==6.0
+python_telegram_bot==20.1
+python-telegram-bot[job-queue]
