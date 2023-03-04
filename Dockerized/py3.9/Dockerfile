@@ -11,4 +11,5 @@ FROM python:3.9-alpine
 COPY --from=build /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 ADD / /Crisp_Telegram_Bot
 WORKDIR /Crisp_Telegram_Bot
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["python3","bot.py"]
