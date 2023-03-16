@@ -39,14 +39,15 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                         client.website.mark_messages_read_in_conversation(
                             website_id, session_id, data)
 
-                        text = '📠Crisp消息推送\n'
+                        text = '📠<b>Crisp消息推送</b>\n'
                         content = message['content']
-                        text = f'{text}🧾内容：{content}\n\n'
-                        text = f'{text}🧷Session：{session_id}'
+                        text = f'{text}🧾<b>内容</b>：{content}\n\n'
+                        text = f'{text}🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
                         for admin_id in config['bot']['admin_id']:
                             await context.bot.send_message(
                                 chat_id=admin_id,
-                                text=text
+                                text=text,
+                                parse_mode='HTML'
                             )
                     # 筛选出文件类型消息
                     if message['type'] == 'file':
@@ -57,6 +58,13 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                             data['fingerprints'] = [message['fingerprint']]
                             client.website.mark_messages_read_in_conversation(
                                 website_id, session_id, data)
-                            
+                        
+                            text = '📠<b>Crisp消息推送</b>\n'
+                            text = f'{text}🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
                             for admin_id in config['bot']['admin_id']:
-                                await context.bot.send_photo(chat_id=admin_id, photo=message['content']['url'], caption=message['content']['name'])
+                                await context.bot.send_photo(
+                                    chat_id=admin_id, 
+                                    photo=message['content']['url'], 
+                                    caption=text,
+                                    parse_mode='HTML'
+                                )

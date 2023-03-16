@@ -43,9 +43,9 @@ except Exception as error:
 
 try:
     token = config['bot']['token']
-    #proxy = 'http://192.168.50.250:7890'
+    # proxy = 'http://127.0.0.1:7890'
     app = Application.builder().token(token).build()
-    #app = Application.builder().token(token).proxy_url(proxy).get_updates_proxy_url(proxy).build()
+    # app = Application.builder().token(token).proxy_url(proxy).get_updates_proxy_url(proxy).build()
 except Exception as error:
     print('无法启动 Telegram Bot，请确认 Bot Token 是否正确，或者是否能连接 Telegram 服务器')
     sys.exit(0)
@@ -54,7 +54,10 @@ except Exception as error:
 async def onReply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = update.effective_message
     website_id = config['crisp']['website']
-    session_id = re.search('session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.text).group()
+    if msg.reply_to_message.text is not None:
+        session_id = re.search('session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.text).group()
+    elif msg.reply_to_message.caption is not None:
+        session_id = re.search('session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.caption).group()
     query = {
         "type": "text",
         "content": msg.text,
