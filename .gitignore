@@ -1,5 +1,9 @@
 # Temp
 *.yml
+test.sh
+
+# vscode environment
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
