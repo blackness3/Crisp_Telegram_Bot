@@ -1,3 +1,13 @@
+- [Crisp Telegram Bot via Python](#crisp-telegram-bot-via-python)
+  - [现有功能](#现有功能)
+  - [常规使用](#常规使用)
+  - [申请 Telegram Bot Token](#申请-telegram-bot-token)
+  - [申请 Crisp 以及 MarketPlace 插件](#申请-crisp-以及-marketplace-插件)
+  - [Docker部署](#docker部署)
+      - [参数说明](#参数说明)
+      - [Docker-compose.yml 环境变量说明](#docker-composeyml-环境变量说明)
+      - [tagname说明](#tagname说明)
+
 # Crisp Telegram Bot via Python
 
 一个简单的项目，让 Crisp 客服系统支持透过 Telegram Bot 来快速回复
@@ -90,6 +100,7 @@ python3 bot.py
 | CRISP_ID      | Crisp Marketplace 插件 ID                                                    |
 | CRISP_KEY     | Crisp Marketplace 插件秘钥                                                    |
 | CRISP_WEBSITE | Crisp 网站ID                                                                 |
+|BOT_AUTOREPLY|自动回复设置，详见[常规使用](#常规使用)，新增的时候整行复制往下写。<br>注："\0"是留着给entrypoint转义用的，别删。
 
 
 #### tagname说明
