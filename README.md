@@ -8,6 +8,7 @@ Python 版本需求 >= 3.8
 ## 现有功能
 - 基于Crisp客服系统
 - 自动推送文字、图片到指定聊天
+- 自动基于关键词回复对应内容
 - 支持回复后推送回对应客户
 
 ## 常规使用
@@ -25,6 +26,7 @@ nano config.yml
 # 编辑 line 7 为你的 Crisp Marketplace 插件 ID
 # 编辑 line 8 为你的 Crisp Marketplace 插件秘钥
 # 编辑 line 9 为你的 Crisp 网站ID
+# 编辑 line 11 为自动关键词回复，你可以复制成多行，每个关键词用 `|` 隔开即可，在 `:` 后输入自动回复内容
 python3 bot.py
 ```
 

@@ -11,6 +11,16 @@ class Conf:
     interval = 60
 
 
+def getKey(content: str):
+    if len(config['autoreply']) > 0:
+        for x in config['autoreply']:
+            keyword = x.split('|')
+            for key in keyword:
+                if key in content:
+                    return True, config['autoreply'][x]
+    return False, ''
+
+
 async def exec(context: ContextTypes.DEFAULT_TYPE):
     website_id = config['crisp']['website']
     conversations = client.website.search_conversations(
@@ -34,15 +44,27 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                 if len(message['read']) == 0:
                     # 筛选出文本消息
                     if message['type'] == 'text':
-                        #通过消息指纹将消息置为已读
+                        # 通过消息指纹将消息置为已读
                         data['fingerprints'] = [message['fingerprint']]
                         client.website.mark_messages_read_in_conversation(
                             website_id, session_id, data)
-
                         text = '📠<b>Crisp消息推送</b>\n'
                         content = message['content']
-                        text = f'{text}🧾<b>内容</b>：{content}\n\n'
-                        text = f'{text}🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
+                        text = f'{text}🧾<b>消息内容</b>：{content}\n'
+                        # 自动回复判定
+                        result, autoreply = getKey(message['content'])
+                        if result is True:
+                            text = f'{text}💡<b>自动回复</b>：{autoreply}\n'
+                            query = {
+                                "type": "text",
+                                "content": autoreply,
+                                "from": "operator",
+                                "origin": "chat"
+                            }
+                            client.website.send_message_in_conversation(
+                                website_id, session_id, query)
+                        # Session打个码
+                        text = f'{text}\n🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
                         for admin_id in config['bot']['admin_id']:
                             await context.bot.send_message(
                                 chat_id=admin_id,
@@ -54,17 +76,18 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                         # 通过文件mime type筛选出含image消息
                         mime = str(message['content']['type'])
                         if mime.count('image') > 0:
-                            #通过消息指纹将消息置为已读
+                            # 通过消息指纹将消息置为已读
                             data['fingerprints'] = [message['fingerprint']]
                             client.website.mark_messages_read_in_conversation(
                                 website_id, session_id, data)
-                        
+
                             text = '📠<b>Crisp消息推送</b>\n'
-                            text = f'{text}🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
+                            # Session打个码
+                            text = f'{text}\n🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
                             for admin_id in config['bot']['admin_id']:
                                 await context.bot.send_photo(
-                                    chat_id=admin_id, 
-                                    photo=message['content']['url'], 
+                                    chat_id=admin_id,
+                                    photo=message['content']['url'],
                                     caption=text,
                                     parse_mode='HTML'
                                 )

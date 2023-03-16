@@ -25,10 +25,15 @@ logging.getLogger(__name__)
 VERSION = "2.0"
 
 try:
-    f = open('config.yml', 'r')
+    f = open('config.yml', 'r', encoding='utf-8')
     config = yaml.safe_load(f)
+    if 'autoreply' not in config:
+        with open("config.yml", "w", encoding="utf-8") as f:
+            config['autoreply'] = {'在吗|你好': '欢迎使用客服系统，请等待客服回复你~'}
+            print(config)
+            yaml.dump(config, f, allow_unicode=True)
 except FileNotFoundError as error:
-    print('没有找到 config.yaml，请复制 config.yml.example 并重命名为 config.yml')
+    print('没有找到 config.yml，请复制 config.yml.example 并重命名为 config.yml')
     sys.exit(0)
 
 try:
@@ -55,9 +60,11 @@ async def onReply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = update.effective_message
     website_id = config['crisp']['website']
     if msg.reply_to_message.text is not None:
-        session_id = re.search('session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.text).group()
+        session_id = re.search(
+            'session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.text).group()
     elif msg.reply_to_message.caption is not None:
-        session_id = re.search('session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.caption).group()
+        session_id = re.search(
+            'session_\w{8}(-\w{4}){3}-\w{12}', msg.reply_to_message.caption).group()
     query = {
         "type": "text",
         "content": msg.text,
@@ -65,6 +72,7 @@ async def onReply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "origin": "chat"
     }
     client.website.send_message_in_conversation(website_id, session_id, query)
+
 
 def main():
     try:
@@ -75,7 +83,8 @@ def main():
             mods = getattr(Modules, i)
             Conf = mods.Conf
             if Conf.method == 'repeating':
-                app.job_queue.run_repeating(mods.exec, interval=Conf.interval, name=i)
+                app.job_queue.run_repeating(
+                    mods.exec, interval=Conf.interval, name=i)
         # 启动 Bot
         app.run_polling(drop_pending_updates=True)
     except Exception as error:
