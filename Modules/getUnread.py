@@ -37,8 +37,8 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
         for conversation in conversations:
             session_id = conversation['session_id']
             # Crisp api docs: Returns the last batch of messages. 这个last batch到底能有多少我没整明白.
-            messages = client.website.get_messages_in_conversation(
-                website_id, conversation['session_id'], query)
+            messages = client.website.get_messages_in_conversation(website_id, session_id, query)
+            metas = client.website.get_conversation_metas(website_id, session_id)
             for message in messages:
                 # read长度为0时该条消息未读
                 if len(message['read']) == 0:
@@ -46,9 +46,11 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                     if message['type'] == 'text':
                         # 通过消息指纹将消息置为已读
                         data['fingerprints'] = [message['fingerprint']]
-                        client.website.mark_messages_read_in_conversation(
-                            website_id, session_id, data)
+                        client.website.mark_messages_read_in_conversation(website_id, session_id, data)
                         text = '📠<b>Crisp消息推送</b>\n'
+                        if len(metas['email']) > 0:
+                            email = metas['email']
+                            text = f'{text}📧<b>电子邮箱</b>：{email}\n'
                         content = message['content']
                         text = f'{text}🧾<b>消息内容</b>：{content}\n'
                         # 自动回复判定
@@ -61,8 +63,7 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                                 "from": "operator",
                                 "origin": "chat"
                             }
-                            client.website.send_message_in_conversation(
-                                website_id, session_id, query)
+                            client.website.send_message_in_conversation(website_id, session_id, query)
                         # Session打个码
                         text = f'{text}\n🧷<b>Session</b>：<tg-spoiler>{session_id}</tg-spoiler>'
                         for admin_id in config['bot']['admin_id']:
@@ -78,8 +79,7 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                         if mime.count('image') > 0:
                             # 通过消息指纹将消息置为已读
                             data['fingerprints'] = [message['fingerprint']]
-                            client.website.mark_messages_read_in_conversation(
-                                website_id, session_id, data)
+                            client.website.mark_messages_read_in_conversation(website_id, session_id, data)
 
                             text = '📠<b>Crisp消息推送</b>\n'
                             # Session打个码
