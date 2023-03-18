@@ -48,9 +48,9 @@ except Exception as error:
 
 try:
     token = config['bot']['token']
-    proxy = 'http://127.0.0.1:7890'
-    # app = Application.builder().token(token).build()
-    app = Application.builder().token(token).proxy_url(proxy).get_updates_proxy_url(proxy).build()
+    # proxy = 'http://127.0.0.1:7890'
+    app = Application.builder().token(token).build()
+    # app = Application.builder().token(token).proxy_url(proxy).get_updates_proxy_url(proxy).build()
 except Exception as error:
     print('无法启动 Telegram Bot，请确认 Bot Token 是否正确，或者是否能连接 Telegram 服务器')
     sys.exit(0)
