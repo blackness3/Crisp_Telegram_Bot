@@ -7,7 +7,7 @@ services:
   bot:
     image: moefaq/Crisp_Telegram_Bot
     volumes:
-      - "<Crisp_Telegram_Bot_data>/config.yml:/V2Board_Python_Bot/config.yml"
+      - "<Crisp_Telegram_Bot_data>/config.yml:/Crisp_Telegram_Bot/config.yml"
     restart: always
     environment:
       TZ: Asia/Shanghai
