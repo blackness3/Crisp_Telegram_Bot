@@ -51,6 +51,14 @@ async def exec(context: ContextTypes.DEFAULT_TYPE):
                         if len(metas['email']) > 0:
                             email = metas['email']
                             text = f'{text}📧<b>电子邮箱</b>：{email}\n'
+                        if len(metas['data']) > 0:
+                            if 'Plan' in metas['data']:
+                                Plan = metas['data']['Plan']
+                                text = f'{text}🪪<b>使用套餐</b>：{Plan}\n'
+                            if 'UsedTraffic' in metas['data'] and 'AllTraffic' in metas['data']:
+                                UsedTraffic = metas['data']['UsedTraffic']
+                                AllTraffic = metas['data']['AllTraffic']
+                                text = f'{text}🗒<b>流量信息</b>：{UsedTraffic} / {AllTraffic}\n'
                         content = message['content']
                         text = f'{text}🧾<b>消息内容</b>：{content}\n'
                         # 自动回复判定
