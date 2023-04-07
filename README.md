@@ -4,9 +4,14 @@
   - [申请 Telegram Bot Token](#申请-telegram-bot-token)
   - [申请 Crisp 以及 MarketPlace 插件](#申请-crisp-以及-marketplace-插件)
   - [Docker部署](#docker部署)
-      - [参数说明](#参数说明)
-      - [Docker-compose.yml 环境变量说明](#docker-composeyml-环境变量说明)
-      - [tagname说明](#tagname说明)
+    - [1. 安装Docker](#1-安装docker)
+    - [2. 部署容器](#2-部署容器)
+      - [2.1 下载compose文件](#21-下载compose文件)
+      - [2.2 使用环境变量进行配置](#22-使用环境变量进行配置)
+      - [2.3 运行容器](#23-运行容器)
+    - [3. 环境变量说明](#3-环境变量说明)
+    - [4. tagname说明](#4-tagname说明)
+  - [特别说明](#特别说明)
 
 # Crisp Telegram Bot via Python
 
@@ -58,57 +63,41 @@ python3 bot.py
 8. 保存后即可获得ID和Key，此时点击右上角 Install Plugin on Website 即可。
 
 ## Docker部署
-    docker pull moefaq/crisp_telegram_bot:tagname
-#### 参数说明
-<table>
-    <tr>
-        <th>选项/参数</th>
-        <th>说明</th>
-    </tr>
-    <tr>
-        <td>--name </td>
-        <td>容器名称设置为: </td>
-    </tr>
-    <tr>
-        <td>-v ./config.yaml:/Crisp_Telegram_Bot/config.yaml</td>
-        <td rowspan="2">将配置文件config.yaml挂载至容器中</td>
-    </tr>
-    <tr>
-        <td>&lt;Crisp_Telegram_Bot_data&gt;/config.yaml:/Crisp_Telegram_Bot/config.yaml</td>
-    </tr>
-    <tr>
-        <td>moefaq/Crisp_Telegram_Bot-docker:latest</td>
-        <td>指定镜像, latest为镜像tag, 详见<a href="#24-image-tag%E8%AF%B4%E6%98%8E">Image tag说明</a></td>
-    </tr>
-    <tr>
-        <td>-f docker-compose.yaml</td>
-        <td>指定compose文件</td>
-    </tr>
-    <tr>
-        <td>-p ctb</td>
-        <td>指定project名称, 指定后容器名形如ctb-bot-1</td>
-    </tr>
-</table>
+### 1. 安装Docker  
+详细方法参详Linux发行版Wiki 或 [Docker Docs](https://docs.docker.com/desktop/get-started/)  
 
-#### Docker-compose.yml 环境变量说明
+### 2. 部署容器
+#### 2.1 下载compose文件
+    curl -JL https://github.com/DyAxy/Crisp_Telegram_Bot/raw/master/docker-compose.yml.example -o docker-compose.yml
+#### 2.2 使用环境变量进行配置
+编辑docker-compose.yml文件，按照自己的情况将参数值填写到environment下的各项当中。  
+同时保持volumes相关内容处于注释状态。
+详细说明见[2.4 环境变量说明](#3-环境变量说明)
+#### 2.3 运行容器
+    docker compose -f docker-compose.yml up
+
+### 3. 环境变量说明
 容器未挂载config.yml时，entrypoint.sh会根据环境变量生成config.yml。  
 注：distroless构建的镜像暂不支持环境变量生产配置文件。
-| 选项/参数     | 说明                                                                         |
-| ------------- | ---------------------------------------------------------------------------- |
-| BOT_TOKEN     |                                                                              |
-| BOT_ADMIN_ID  | 管理员tg id，使用半角逗号(,)分隔。<br>e.g. 123456789,321654987,555555,111222   |
-| CRISP_ID      | Crisp Marketplace 插件 ID                                                    |
-| CRISP_KEY     | Crisp Marketplace 插件秘钥                                                    |
-| CRISP_WEBSITE | Crisp 网站ID                                                                 |
-|BOT_AUTOREPLY|自动回复设置，详见[常规使用](#常规使用)，新增的时候整行复制往下写。<br>注："\0"是留着给entrypoint转义用的，别删。
+| 选项/参数     | 说明                                                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| BOT_TOKEN     |                                                                                                                   |
+| BOT_ADMIN_ID  | 管理员tg id，使用半角逗号(,)分隔。<br>e.g. 123456789,321654987,555555,111222                                      |
+| CRISP_ID      | Crisp Marketplace 插件 ID                                                                                         |
+| CRISP_KEY     | Crisp Marketplace 插件秘钥                                                                                        |
+| CRISP_WEBSITE | Crisp 网站ID                                                                                                      |
+| BOT_AUTOREPLY | 自动回复设置，详见[常规使用](#常规使用)，新增的时候整行复制往下写。<br>注："\0"是留着给entrypoint转义用的，别删。 |
 
 
-#### tagname说明
-| tag        | 说明                                                  | image size                                                                                                |
-| ---------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| latest     | alpine 3.17 + python 3.8                              | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/latest)     |
-| 3.8        | 同latest                                              | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.8)      |
-| 3.9        | alpine 3.17 + python 3.9                              | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.9)      |
-| 3.10       | alpine 3.17 + python 3.10                             | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.10)     |
-| 3.11       | alpine 3.17 + python 3.11                             | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.11)     |
-| distroless | 使用google distroless镜像构建<br>debian11 +python 3.9 | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/distroless) |
+### 4. tagname说明
+| tag    | 说明                      | image size                                                                                            |
+| ------ | ------------------------- | ----------------------------------------------------------------------------------------------------- |
+| latest | alpine 3.17 + python 3.8  | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/latest) |
+| 3.8    | 同latest                  | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.8)  |
+| 3.9    | alpine 3.17 + python 3.9  | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.9)  |
+| 3.10   | alpine 3.17 + python 3.10 | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.10) |
+| 3.11   | alpine 3.17 + python 3.11 | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/moefaq/crisp_telegram_bot/py3.11) |
+
+## 特别说明
+某些v2board自定义主题没有向crisp push data，需要用户自行实现，详见[crisp Chatbox Web SDK](https://docs.crisp.chat/guides/chatbox-sdks/web-sdk/)  
+本项目包含一个v2board的示例: [v2board.js](/Assistant/JavaScript/v2board.js)
