@@ -22,6 +22,7 @@ crisp:
   id: ${CRISP_ID}
   key: ${CRISP_KEY}
   website: ${CRISP_WEBSITE}
+  msgapi: ${CRISP_MSGAPI}
 autoreply:
 ${BOT_AUTOREPLY}
 EOF

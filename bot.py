@@ -82,9 +82,12 @@ def main():
         for i in Modules.content:
             mods = getattr(Modules, i)
             Conf = mods.Conf
-            if Conf.method == 'repeating':
-                app.job_queue.run_repeating(
-                    mods.exec, interval=Conf.interval, name=i)
+            if Conf.enable:
+                if Conf.method == 'repeating':
+                    app.job_queue.run_repeating(
+                        mods.exec, interval=Conf.interval, name=i)
+                if Conf.method == 'events':
+                    app.job_queue.run_once(mods.exec,5,name=i)
         # 启动 Bot
         app.run_polling(drop_pending_updates=True)
     except Exception as error:

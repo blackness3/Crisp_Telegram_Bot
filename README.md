@@ -78,7 +78,6 @@ python3 bot.py
 
 ### 3. 环境变量说明
 容器未挂载config.yml时，entrypoint.sh会根据环境变量生成config.yml。  
-注：distroless构建的镜像暂不支持环境变量生产配置文件。
 | 选项/参数     | 说明                                                                                                              |
 | ------------- | ----------------------------------------------------------------------------------------------------------------- |
 | BOT_TOKEN     |                                                                                                                   |
@@ -86,6 +85,7 @@ python3 bot.py
 | CRISP_ID      | Crisp Marketplace 插件 ID                                                                                         |
 | CRISP_KEY     | Crisp Marketplace 插件秘钥                                                                                        |
 | CRISP_WEBSITE | Crisp 网站ID                                                                                                      |
+| CRISP_MSGAPI  | 可选值为: rtm / rest<br>使用rtm时crisp消息实时推送，每条消息只在markread时消耗1次restful api<br>使用rest时，你懂的                        |
 | BOT_AUTOREPLY | 自动回复设置，详见[常规使用](#常规使用)，新增的时候整行复制往下写。<br>注："\0"是留着给entrypoint转义用的，别删。 |
 
 

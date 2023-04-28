@@ -7,5 +7,6 @@ crisp:
   id: 
   key: 
   website: 
+  msgapi: rtm
 autoreply:
   '在吗|你好' : '欢迎使用客服系统，请等待客服回复你~'
