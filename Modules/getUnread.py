@@ -9,7 +9,10 @@ class Conf:
     desc = '推送未读新消息'
     method = 'repeating'
     interval = 60
+    enable = False
 
+if config['crisp']['msgapi'] == 'rest':
+    Conf.enable = True
 
 def getKey(content: str):
     if len(config['autoreply']) > 0:

@@ -16,6 +16,7 @@ services:
       CRISP_ID: 
       CRISP_KEY: 
       CRISP_WEBSITE: 
+      CRISP_MSGAPI: rtm
       BOT_AUTOREPLY: |
         \0  '在吗|你好' : '欢迎使用客服系统，请等待客服回复你~'
         \0  '关键字1|关键字2' : '自动应答语A'
