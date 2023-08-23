@@ -1,8 +1,10 @@
 - [Crisp Telegram Bot via Python](#crisp-telegram-bot-via-python)
   - [现有功能](#现有功能)
+  - [计划功能](#计划功能)
   - [常规使用](#常规使用)
   - [申请 Telegram Bot Token](#申请-telegram-bot-token)
   - [申请 Crisp 以及 MarketPlace 插件](#申请-crisp-以及-marketplace-插件)
+  - [服务部署](#服务部署)
   - [Docker部署](#docker部署)
     - [1. 安装Docker](#1-安装docker)
     - [2. 部署容器](#2-部署容器)
@@ -26,11 +28,16 @@ Python 版本需求 >= 3.8
 - 自动基于关键词回复对应内容
 - 支持回复后推送回对应客户
 
+## 计划功能
+- 回复图片功能（需要Crisp订阅）
+- 兼容GPT实现更智能的自动回复
+- 基础回复语料库模型
+- 客制化产品语料库模型
+
 ## 常规使用
 ```
 # apt install git 如果你没有git的话
 git clone https://github.com/DyAxy/Crisp_Telegram_Bot.git
-# 进程常驻可参考 screen 或 nohup
 # 你需要安装好 pip3 的包管理
 cd Crisp_Telegram_Bot
 pip3 install -r requirements.txt
@@ -43,6 +50,7 @@ nano config.yml
 # 编辑 line 9 为你的 Crisp 网站ID
 # 编辑 line 11 为自动关键词回复，你可以复制成多行，每个关键词用 `|` 隔开即可，在 `:` 后输入自动回复内容
 python3 bot.py
+# 如果第一次运行正常并测试完成，那么可以使用接下来的部署方法常驻进程
 ```
 
 ## 申请 Telegram Bot Token
@@ -61,6 +69,31 @@ python3 bot.py
 6. 需要Production Key，点击 Ask a production token，再点击Add a Scope。
 7. 需要 2 条**read**和**write**权限：`website:conversation:sessions` 和 `website:conversation:messages`
 8. 保存后即可获得ID和Key，此时点击右上角 Install Plugin on Website 即可。
+
+## 服务部署
+```
+# 如果使用常规使用中的 git 方式拉取文件，那么可以直接使用该方式
+# 当前处于 Crisp_Telegram_Bot 目录内
+# 在部署前，建议尝试使用一下命令测试是否正常运行
+/usr/bin/python3 bot.py
+# 正常运行后开始部署服务
+cp Systemd/crisp_telegram_bot.service /etc/systemd/system/
+# 重读服务守护
+systemctl daemon-reload
+# 启动服务
+systemctl start crisp_telegram_bot
+# 设为开启启动
+systemctl enable crisp_telegram_bot
+# 常用命令
+# 停止服务
+systemctl stop crisp_telegram_bot
+# 重启服务
+systemctl restart crisp_telegram_bot
+# 取消开启启动
+systemctl disable crisp_telegram_bot
+# 查看服务状态
+systemctl status crisp_telegram_bot
+```
 
 ## Docker部署
 ### 1. 安装Docker  
