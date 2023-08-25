@@ -5,9 +5,9 @@ networks:
 
 services:
   bot:
-    image: moefaq/crisp_telegram_bot
-    volumes:
-      - "<Crisp_Telegram_Bot_data>/config.yml:/Crisp_Telegram_Bot/config.yml"
+    image: heaid/crisp_tgbot
+#    volumes:
+#      - "<Crisp_Telegram_Bot_data>/config.yml:/Crisp_Telegram_Bot/config.yml"
     restart: always
     environment:
       TZ: Asia/Shanghai
